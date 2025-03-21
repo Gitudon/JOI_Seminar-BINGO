@@ -6,5 +6,6 @@ services:
       - ./bot:/usr/src/app:rw
     environment:
       - TOKEN=${TOKEN}
+      - CHANNEL=${CHANNEL}
     command: ["python3", "main.py"]
     tty: true
