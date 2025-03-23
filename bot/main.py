@@ -15,6 +15,7 @@ client = commands.Bot(
 
 members=[]
 bingo=[]
+# running[0]: Bingo, running[1]: Add
 running=[False,False]
 
 @client.event
@@ -132,18 +133,23 @@ async def on_message(message):
         else:
             await message.channel.send("ゲームが終了していません！")
         return
+    if message.content==('/del'):
+        if running[1]:
+            if message.author in members:
+                members.remove(message.author)
+                await message.channel.send(f'{message.author.mention} が参加を取り消しました。')
+        elif running[0]:
+            if message.author in bingo:
+                bingo.remove(message.author)
+                await message.channel.send(f'{message.author.mention} がビンゴを取り消しました。')
     if running[1]:
         if message.attachments!=[]:
             if message.author not in members:
                 members.append(message.author)
                 await message.channel.send(f'{message.author.mention} が参加しました！')
-        if message.content==('/del'):
-            if message.author in members:
-                members.remove(message.author)
-                await message.channel.send(f'{message.author.mention} が参加を取り消しました。')
     elif running[0]:
         if message.attachments!=[]:
-            if message.author in members:
+            if message.author in members and message.author not in bingo:
                 bingo.append(message.author)
                 reply=f'{message.author.mention} がビンゴしました！ ('+str(len(bingo))+'番目)'
                 await message.channel.send(reply)
