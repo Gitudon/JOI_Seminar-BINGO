@@ -116,6 +116,7 @@ async def on_message(message):
                 if m not in bingo:
                     gyakubingo.append(m)
             if num.isdigit():
+                num=int(num)
                 if num>len(bingo):
                     await message.channel.send("入力が大きすぎます。")
                 else:
