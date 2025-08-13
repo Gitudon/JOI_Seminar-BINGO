@@ -4,8 +4,9 @@ services:
     build: .
     volumes:
       - ./bot:/usr/src/app:rw
+    env_file:
+      - .env
     environment:
-      - TOKEN=${TOKEN}
-      - CHANNEL=${CHANNEL}
+      - TZ=Asia/Tokyo
     command: ["python3", "main.py"]
     tty: true
