@@ -155,7 +155,8 @@ async def show(ctx, *args):
             True,
         )
         members_list = "\n".join([m[0] for m in members])
-        await add_line_break(members_list)
+        if members_list != "":
+            members_list += "\n"
         members_list += "\n".join([(t[0] + "(チューター)") for t in tutor_members])
         if members_list == "":
             await ctx.channel.send("現在参加者はいません。")
@@ -178,9 +179,11 @@ async def show(ctx, *args):
             True,
         )
         bingo_members_list = "\n".join([(n[0] + "(最速)") for n in numberone_members])
-        await add_line_break(bingo_members_list)
+        if bingo_members_list != "":
+            bingo_members_list += "\n"
         bingo_members_list += "\n".join([b[0] for b in bingo_members])
-        await add_line_break(bingo_members_list)
+        if bingo_members_list != "":
+            bingo_members_list += "\n"
         bingo_members_list += "\n".join(
             [(t[0] + "(チューター)") for t in tutor_bingo_members]
         )
