@@ -360,6 +360,7 @@ async def choice(ctx, *args):
         reply += "**飛び賞**\n" + "\n".join(mentioned_winners)
     if reply != "":
         await ctx.channel.send("おめでとうございます！\n\n" + reply)
+        current_mode = "Preparing"
     else:
         await ctx.channel.send("ビンゴした人がいません。")
 
@@ -395,6 +396,7 @@ async def gyakuchoice(ctx, *args):
                 "おめでとうございます！\n\n**逆ビンゴ賞**\n"
                 + "\n".join(mentioned_gyaku_winners)
             )
+            current_mode = "Preparing"
     else:
         await ctx.send("ビンゴしていない人がいません。")
 
