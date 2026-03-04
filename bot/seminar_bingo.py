@@ -1,9 +1,9 @@
 # import周り
+import os
+import random
 import discord
 from discord.ext import commands
 import mysql.connector
-import os
-import random
 
 # 環境変数の読み込み、クライアントの準備
 TOKEN = os.getenv("TOKEN")

@@ -3,10 +3,10 @@ services:
   bot:
     build: .
     volumes:
-      - ./bot:/usr/src/app:rw
+      - ./bot:/usr/src/bot:rw
     env_file:
       - .env
     environment:
       - TZ=Asia/Tokyo
-    command: ["python3", "main.py"]
+    command: ["python3", "seminar_bingo.py"]
     tty: true
