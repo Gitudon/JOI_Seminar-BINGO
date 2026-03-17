@@ -323,7 +323,7 @@ async def on_message(message):
             "SELECT is_active FROM bingo_participants WHERE name = %s",
             (message.author.display_name,),
         )
-        if person is None:
+        if person == []:
             await UseMySQL.run_sql(
                 "INSERT INTO bingo_participants (name, mention) VALUES (%s, %s)",
                 (message.author.display_name, message.author.mention),
@@ -341,7 +341,7 @@ async def on_message(message):
                     f"{message.author.mention}さんが参加しました！"
                 )
         else:
-            is_active = person[0]
+            is_active = person[0][0]
             if not is_active:
                 await UseMySQL.run_sql(
                     "UPDATE bingo_participants SET mention = %s, is_tutor = FALSE, got_bingo = FALSE, is_numberone = FALSE, is_active = TRUE WHERE name = %s",
@@ -377,12 +377,12 @@ async def on_message(message):
             "SELECT got_bingo FROM bingo_participants WHERE is_active = TRUE AND name = %s",
             (message.author.display_name,),
         )
-        if person is None:
+        if person == []:
             await message.channel.send(
                 f"{message.author.mention}さんは参加していません。"
             )
             return
-        if not person[0]:
+        if not person[0][0]:
             await UseMySQL.run_sql(
                 "UPDATE bingo_participants SET got_bingo = TRUE WHERE name = %s",
                 (message.author.display_name,),
@@ -390,22 +390,21 @@ async def on_message(message):
             bingo_count = await UseMySQL.run_sql(
                 "SELECT COUNT(*) FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_active = TRUE",
                 (),
-            )
-            bingo_count = bingo_count[0]
-            if bingo_count == 1:
-                await UseMySQL.run_sql(
-                    "UPDATE bingo_participants SET is_numberone = TRUE WHERE name = %s",
-                    (message.author.display_name,),
-                )
+            )[0][0]
             tutor = await UseMySQL.run_sql(
-                "SELECT Logic.is_tutor FROM bingo_participants WHERE got_bingo = TRUE AND is_active = TRUE AND name = %s",
+                "SELECT is_tutor FROM bingo_participants WHERE got_bingo = TRUE AND is_active = TRUE AND name = %s",
                 (message.author.display_name,),
-            )
-            if tutor[0]:
+            )[0][0]
+            if tutor:
                 await message.channel.send(
                     f"{message.author.mention}さん(チューター)がビンゴしました！"
                 )
             else:
+                if bingo_count == 1:
+                    await UseMySQL.run_sql(
+                        "UPDATE bingo_participants SET is_numberone = TRUE WHERE name = %s",
+                        (message.author.display_name,),
+                    )
                 await message.channel.send(
                     f"{message.author.mention}さんがビンゴしました！({bingo_count}番目)"
                 )
