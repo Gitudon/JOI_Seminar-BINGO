@@ -8,4 +8,5 @@ services:
     environment:
       - TZ=Asia/Tokyo
     command: ["python3", "seminar_bingo.py"]
+    restart: unless-stopped
     tty: true
