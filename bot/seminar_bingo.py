@@ -6,7 +6,6 @@ from use_mysql import UseMySQL
 intents = discord.Intents.default()
 intents.message_content = True
 client = commands.Bot(command_prefix="/", intents=intents)
-
 # ビンゴの状態を管理するグローバル変数
 # Preparing: 待機中
 # Adding: 参加者追加中
