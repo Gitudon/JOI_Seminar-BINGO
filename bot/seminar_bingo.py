@@ -59,11 +59,11 @@ async def show(ctx, *args):
         await ctx.channel.send(f"現在のモード: {current_mode}")
     elif args[0] == "members":
         members = await UseMySQL.run_sql(
-            "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND is_active = TRUE",
+            "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND is_active = TRUE ORDER BY name",
             (),
         )
         tutor_members = await UseMySQL.run_sql(
-            "SELECT name FROM bingo_participants WHERE is_tutor = TRUE AND is_active = TRUE",
+            "SELECT name FROM bingo_participants WHERE is_tutor = TRUE AND is_active = TRUE ORDER BY name",
             (),
         )
         members_list = "\n".join([m[0] for m in members])
@@ -76,15 +76,15 @@ async def show(ctx, *args):
         await ctx.channel.send(f"現在の参加者(敬称略):\n\n{members_list}")
     elif args[0] == "bingo":
         numberone_members = await UseMySQL.run_sql(
-            "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_numberone = TRUE AND is_active = TRUE",
+            "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_numberone = TRUE AND is_active = TRUE ORDER BY name",
             (),
         )
         bingo_members = await UseMySQL.run_sql(
-            "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_numberone = FALSE AND is_active = TRUE",
+            "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_numberone = FALSE AND is_active = TRUE ORDER BY name",
             (),
         )
         tutor_bingo_members = await UseMySQL.run_sql(
-            "SELECT name FROM bingo_participants WHERE is_tutor = TRUE AND got_bingo = TRUE AND is_active = TRUE",
+            "SELECT name FROM bingo_participants WHERE is_tutor = TRUE AND got_bingo = TRUE AND is_active = TRUE ORDER BY name",
             (),
         )
         bingo_members_list = "\n".join([(n[0] + "(最速)") for n in numberone_members])
@@ -244,7 +244,7 @@ async def choice(ctx, *args):
         await ctx.channel.send("正の整数を指定してください。")
         return
     numberone_members = await UseMySQL.run_sql(
-        "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_numberone = TRUE AND is_active = TRUE",
+        "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_numberone = TRUE AND is_active = TRUE ORDER BY name",
         (),
     )
     reply = ""
@@ -253,7 +253,7 @@ async def choice(ctx, *args):
         mentioned_speed_winners = await Logic.add_mention(speed_winners)
         reply += "**最速賞**\n" + "\n".join(mentioned_speed_winners)
     bingo_members = await UseMySQL.run_sql(
-        "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_numberone = FALSE AND is_active = TRUE",
+        "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_numberone = FALSE AND is_active = TRUE ORDER BY name",
         (),
     )
     if len(bingo_members) != 0:
@@ -395,12 +395,14 @@ async def on_message(message):
             bingo_count = await UseMySQL.run_sql(
                 "SELECT COUNT(*) FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_active = TRUE",
                 (),
-            )[0][0]
+            )
+            bingo_count = bingo_count[0][0]
             tutor = await UseMySQL.run_sql(
                 "SELECT is_tutor FROM bingo_participants WHERE got_bingo = TRUE AND is_active = TRUE AND name = %s",
                 (message.author.display_name,),
-            )[0][0]
-            if tutor:
+            )
+            is_tutor = tutor[0][0]
+            if is_tutor:
                 await message.channel.send(
                     f"{message.author.mention}さん(チューター)がビンゴしました！"
                 )
