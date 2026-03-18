@@ -240,6 +240,9 @@ async def choice(ctx, *args):
         await ctx.channel.send("引数は数字でなければなりません。")
         return
     num = int(args[0])
+    if num <= 0:
+        await ctx.channel.send("正の整数を指定してください。")
+        return
     numberone_members = await UseMySQL.run_sql(
         "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = TRUE AND is_numberone = TRUE AND is_active = TRUE",
         (),
@@ -284,6 +287,9 @@ async def gyakuchoice(ctx, *args):
         await ctx.channel.send("引数は数字でなければなりません。")
         return
     num = int(args[0])
+    if num <= 0:
+        await ctx.channel.send("正の整数を指定してください。")
+        return
     not_bingo_members = await UseMySQL.run_sql(
         "SELECT name FROM bingo_participants WHERE is_tutor = FALSE AND got_bingo = FALSE AND is_active = TRUE",
         (),
