@@ -8,7 +8,7 @@ class Logic:
         return not (ctx.author.bot) and ctx.channel.id == CHANNEL
 
     @classmethod
-    async def is_tutor(cls, ctx):
+    async def is_tutor(cls, ctx) -> bool:
         if not await cls.is_correct_message(ctx):
             return False
         role = discord.utils.get(ctx.author.roles, name="チューター")
@@ -17,7 +17,7 @@ class Logic:
         return True
 
     @staticmethod
-    async def file_exists(ctx):
+    async def file_exists(ctx) -> bool:
         if ctx.attachments == []:
             return False
         return True
@@ -29,7 +29,7 @@ class Logic:
         return text
 
     @staticmethod
-    async def add_mention(lst):
+    async def add_mention(lst) -> list:
         mentions = []
         for member_name in lst:
             member = await UseMySQL.run_sql(

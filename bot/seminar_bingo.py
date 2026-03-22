@@ -8,9 +8,9 @@ intents.message_content = True
 client = commands.Bot(command_prefix="/", intents=intents)
 # ビンゴの状態を管理するグローバル変数
 # Preparing: 待機中
-# Adding: 参加者追加中
-# Running: ビンゴ中
-# Choosing: 受賞者選択中
+# Adding   : 参加者追加中
+# Running  : ビンゴ中
+# Choosing : 受賞者選択中
 current_mode = "Preparing"
 
 
@@ -18,9 +18,10 @@ current_mode = "Preparing"
 async def test(ctx):
     if not await Logic.is_tutor(ctx):
         return
-    await ctx.send("Bot is working!")
+    await ctx.send("JOI Seminar Bingo Bot is working!")
 
 
+# 現在のモードを変更する
 @client.command()
 async def change_mode(ctx, *args):
     global current_mode
@@ -272,6 +273,8 @@ async def choice(ctx, *args):
         await ctx.channel.send("ビンゴした人がいません。")
 
 
+# 逆ビンゴを選ぶときChoosingにもどすのがダサい
+# ビンゴ集計モード→逆ビンゴ集計モード
 @client.command()
 async def gyakuchoice(ctx, *args):
     global current_mode
